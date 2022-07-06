@@ -1,7 +1,7 @@
 ---
 title: "Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)"
 author: "Frank DAVID"
-date: '2022-07-04'
+date: "2022-07-04"
 output:  
   html_document:
     keep_md: true
@@ -420,8 +420,8 @@ adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
 ## adonis2(formula = PIGprct ~ sexPIG * as.factor(splPIG), method = "bray")
 ##                           Df SumOfSqs      R2       F Pr(>F)    
 ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
-## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.002 ** 
-## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.007 ** 
+## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
+## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.003 ** 
 ## Residual                  88  0.30689 0.34086                   
 ## Total                    115  0.90034 1.00000                   
 ## ---
