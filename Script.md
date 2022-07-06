@@ -1,10 +1,7 @@
 ---
-title: "Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)"
-author: "Frank DAVID"
-date: "2022-07-04"
-output:  
-  html_document:
-    keep_md: true
+Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)  
+Frank DAVID  
+2022-07-04  
 ---
 
 
