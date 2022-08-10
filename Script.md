@@ -1,7 +1,10 @@
 ---
-Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)  
-Frank DAVID  
-2022-07-04  
+title: "Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)"
+author: "Frank DAVID"
+date: "2022-07-04"
+output:  
+  html_document:
+    keep_md: true
 ---
 
 
@@ -297,11 +300,11 @@ cut=cutree(dendro.fau, k=3)
 
 <img src="Script_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
+
 ## Summary table
 
 ```r
 # Sums of fatty acids
-### Variables AG
 
 brFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C14.0iso"), which(colnames(FAprct)=="C15.0iso"), which(colnames(FAprct)=="C15.0anteiso"), which(colnames(FAprct)=="C16.0iso"), which(colnames(FAprct)=="C17.0iso"), which(colnames(FAprct)=="C17.0anteiso"))])
 SFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C14.0"), which(colnames(FAprct)=="C15.0"), which(colnames(FAprct)=="C16.0"), which(colnames(FAprct)=="C17.0"), which(colnames(FAprct)=="C18.0"), which(colnames(FAprct)=="C19.0"),which(colnames(FAprct)=="C20.0"), which(colnames(FAprct)=="C21.0"), which(colnames(FAprct)=="C22.0"))])
@@ -417,7 +420,7 @@ adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
 ## adonis2(formula = PIGprct ~ sexPIG * as.factor(splPIG), method = "bray")
 ##                           Df SumOfSqs      R2       F Pr(>F)    
 ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
-## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
+## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.002 ** 
 ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.003 ** 
 ## Residual                  88  0.30689 0.34086                   
 ## Total                    115  0.90034 1.00000                   

@@ -222,10 +222,10 @@ legend("topright", legend=c("Cluster 1", "Cluster 2", "Cluster 3"), pch=c(21, 22
 #dev.off()
 ```
 Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
+
 ## Summary table
 ```{r}
 # Sums of fatty acids
-### Variables AG
 
 brFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C14.0iso"), which(colnames(FAprct)=="C15.0iso"), which(colnames(FAprct)=="C15.0anteiso"), which(colnames(FAprct)=="C16.0iso"), which(colnames(FAprct)=="C17.0iso"), which(colnames(FAprct)=="C17.0anteiso"))])
 SFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C14.0"), which(colnames(FAprct)=="C15.0"), which(colnames(FAprct)=="C16.0"), which(colnames(FAprct)=="C17.0"), which(colnames(FAprct)=="C18.0"), which(colnames(FAprct)=="C19.0"),which(colnames(FAprct)=="C20.0"), which(colnames(FAprct)=="C21.0"), which(colnames(FAprct)=="C22.0"))])
