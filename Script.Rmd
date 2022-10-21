@@ -1,10 +1,7 @@
 ---
-title: "Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)"
-author: "Frank DAVID"
-date: "2022-07-04"
-output:  
-  html_document:
-    keep_md: true
+Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)
+Frank DAVID
+2022-07-04
 ---
 
 ```{r setup, include=FALSE}
@@ -16,6 +13,7 @@ Sys.setlocale("LC_TIME", "C")
 
 This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2022). 
 
+
 ## Preparing the toolbox
 
 Let's begin by loading the libraries that we will require to run the analyses.
@@ -26,6 +24,7 @@ library(vegan)
 library(ade4)
 ```
 
+
 ## Loading the data
 We load both fatty acid and carotenoids data from the GitHub server.
 For details on line and column headings please check the readme file.
@@ -34,6 +33,7 @@ For details on line and column headings please check the readme file.
 FA <- read.csv("https://raw.githubusercontent.com/DAVID-Fk/Sea-cucumber-gonads/main/FA_areas.csv", sep=",", header=T)
 pig <- read.csv("https://raw.githubusercontent.com/DAVID-Fk/Sea-cucumber-gonads/main/Pig_conc.csv", sep=",", header=T)
 ```
+
 
 # Reproductive cycle
 ## Gonad index
@@ -74,13 +74,14 @@ waerden.test(ig[sexPIG=="M"], splPIG[sexPIG=="M"])$statistics
 
 ```{r echo=FALSE, fig.width=6, fig.height=4, fig.align="center"}
 var <- ig
+xdate=seq.Date(as.Date('2019-12-1'), by = 'month', len = 22)[seq(from=1, to=22, by=2)]
 
 par(las=1, mar=c(5,5,1,2), mfrow=c(1,1))
 
 plot(splPIG, var, type="n", xaxt="n", xlab="", ylab="", bty="n")
 
 mtext(text="Gonad index (%)", side=2, las=3, line=2.5, cex=1)
-axis.POSIXct(side=1, x=lvlsplPIG, at=lvlsplPIG, format ="%d %b %y", labels=T, las=2)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
 
 arrows(x0=lvlsplPIG, y0=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) + tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), x1=lvlsplPIG, y1=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) - tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), length=0.03, angle=90, code=3)
 
@@ -94,6 +95,7 @@ points(lvlsplPIG, tapply(var[sexPIG=="M"], as.factor(substring(pig$Id[sexPIG=="M
 
 legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"), bty="n", pt.cex=2, inset=c(0.02,0))
 ```
+
 
 # Fatty acids
 ## Convert FA table to concentrations and relative abundances
@@ -141,6 +143,9 @@ t.test(totFA~sexFA)
 # Significance of total FA concentration differences between sampling events in females 
 waerden.test(totFA[sexFA=="F"], splFA[sexFA=="F"])$statistics
 
+# Let's see if removing the extreme point (April 2021) changes the result of the test
+waerden.test(totFA[sexFA=="F"&splFA!="2021-04-01 CEST"], splFA[sexFA=="F"&splFA!="2021-04-01 CEST"])$statistics
+
 # In males
 waerden.test(totFA[sexFA=="M"], splFA[sexFA=="M"])$statistics
 
@@ -153,8 +158,8 @@ par(las=1, mar=c(5,5,1,2), mfrow=c(1,1))
 
 plot(splFA, var, type="n", xaxt="n", xlab="", ylab="", ylim=c(0, 120), bty="n")
 
-mtext(text=expression(paste("Total fatty acids (mg ", g^-1, ")")), side=2, las=3, line=2.5, cex=1)
-axis.POSIXct(side=1, x=lvlsplFA, at=lvlsplFA, format ="%d %b %y", labels=T, las=2)
+mtext(text=expression(paste("Total fatty acids (mg ", g^-1, " dw)")), side=2, las=3, line=2.5, cex=1)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
 
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="F"], as.factor(substring(FA$Id[sexFA=="F"], 8,11)), mean) + tapply(var[sexFA=="F"], as.factor(substring(FA$Id[sexFA=="F"], 8,11)), sd), x1=lvlsplFA, y1=tapply(var[sexFA=="F"], as.factor(substring(FA$Id[sexFA=="F"], 8,11)), mean) - tapply(var[sexFA=="F"], as.factor(substring(FA$Id[sexFA=="F"], 8,11)), sd), length=0.03, angle=90, code=3)
 
@@ -170,10 +175,24 @@ legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"),
 ```
 
 ## Permutational analysis of variance on fatty acids assemblages
-Lets check if there are significant differences in fatty acid profiles between sampling events.
+Let's first verify if variances are homogenous
+```{r}
+FAvar=betadisper(vegdist(FAprct), paste(sexFA, as.factor(splFA)))
+permutest(FAvar)
+```
+
+Let's check if there are significant differences in fatty acid profiles between sampling events.
 ```{r}
 adonis2(FAprct~sexFA*as.factor(splFA), method="bray")
 ```
+
+As the interaction term is significant both sexes will be considered separately.
+```{r}
+adonis2(FAprct[which(sexFA=="F"),]~as.factor(splFA[which(sexFA=="F")]), method="bray")
+adonis2(FAprct[which(sexFA=="M"),]~as.factor(splFA[which(sexFA=="M")]), method="bray")
+
+```
+
 
 ## Hierarchical clustering
 We will cluster gonads into groups
@@ -210,9 +229,9 @@ points(pcoa$li[, 1], pcoa$li[, 2], pch=c(21, 22, 23)[cut], col="grey40", bg=c("b
 
 centroid=t(summary(a))
 tcentroid=as.POSIXct(substring(rownames(centroid), 3, length(rownames(centroid))), format="%Y-%m-%d")
-labs=format.POSIXct(tcentroid, format ="%d %b %y")
+labs=format.POSIXct(tcentroid, format ="%b %y")
 
-rect(xright=centroid[,1]+0.04, ybottom=centroid[,2]-0.009, xleft=centroid[,1]-0.04, ytop=centroid[,2]+0.009, col=adjustcolor("white", alpha=0.8), border="grey")
+rect(xright=centroid[,1]+0.03, ybottom=centroid[,2]-0.009, xleft=centroid[,1]-0.03, ytop=centroid[,2]+0.009, col=adjustcolor("white", alpha=0.8), border="grey")
 text(centroid, labels=labs)
 
 legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"), bty="n", pt.cex=2, inset=c(0.02, 0))
@@ -234,7 +253,7 @@ w3=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.3w3"), which(colnames(FAprct)
 w6=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.2w6"), which(colnames(FAprct)=="C20.2w6"), which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"), which(colnames(FAprct)=="C22.5w6"))])
 LCMUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w11"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w11"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
 MUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C16.1w7"), which(colnames(FAprct)=="C18.1w9"), which(colnames(FAprct)=="C18.1w7"), which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w11"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w11"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
-HUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.2w6"), which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"),which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.5w6"), which(colnames(FAprct)=="C22.6w3"))])
+HUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"),which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.5w6"), which(colnames(FAprct)=="C22.6w3"))])
 
 prfull=cbind(FAprct, brFA, PUFA, SFA, MUFA, LCMUFA, w3, w6, HUFA, totFA)
 moyAG=data.frame(M=aggregate(prfull, by=list(cut), mean), SD=aggregate(prfull, by=list(cut),sd))
@@ -250,8 +269,8 @@ par(mfrow=c(3,1), mar=c(4,3,2,3), oma=c(2,2,0,0), las=2)
 var=FAprct[, which(colnames(FAprct)=="C16.1w7")]
 
 plot(splFA, var, type="n", xaxt="n", ylab="", xlab="", bty="n", ylim=c(0,15))
-axis.POSIXct(side=1, x=lvlsplFA, at=lvlsplFA, format ="%d %b %y", labels=T, las=2)
-mtext(side=2, expression(paste("Fatty acid 16:1", omega, "7 (%)")), las=3, line=2.5, cex=0.8)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
+mtext(side=2, expression(paste("Fatty acid 16:1", omega, "7 (% of total FA)")), las=3, line=2.5, cex=0.8)
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean) + tapply(var[sexFA=="F"], splFA[sexFA=="F"], sd), x1=lvlsplFA, y1=tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean) - tapply(var[sexFA=="F"], splFA[sexFA=="F"], sd), length=0.03, angle=90, code=3)
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean) + tapply(var[sexFA=="M"], splFA[sexFA=="M"], sd), x1=lvlsplFA, y1=tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean) - tapply(var[sexFA=="M"], splFA[sexFA=="M"], sd), length=0.03, angle=90, code=3)
 lines(lvlsplFA, tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean))
@@ -263,8 +282,8 @@ legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"),
 var=brFA
 
 plot(splFA, var, type="n", xaxt="n", ylab="", xlab="", bty="n", ylim=c(0,20))
-axis.POSIXct(side=1, x=lvlsplFA, at=lvlsplFA, format ="%d %b %y", labels=T, las=2)
-mtext(side=2, expression(paste("Branched FA (%)")), las=3, line=2.5, cex=0.8)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
+mtext(side=2, expression(paste("Branched FA (% of total FA)")), las=3, line=2.5, cex=0.8)
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean) + tapply(var[sexFA=="F"], splFA[sexFA=="F"], sd), x1=lvlsplFA, y1=tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean) - tapply(var[sexFA=="F"], splFA[sexFA=="F"], sd), length=0.03, angle=90, code=3)
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean) + tapply(var[sexFA=="M"], splFA[sexFA=="M"], sd), x1=lvlsplFA, y1=tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean) - tapply(var[sexFA=="M"], splFA[sexFA=="M"], sd), length=0.03, angle=90, code=3)
 lines(lvlsplFA, tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean))
@@ -276,8 +295,8 @@ legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"),
 var=FAprct[, which(colnames(FAprct)=="C22.6w3")]
 
 plot(splFA, var, type="n", xaxt="n", ylab="", xlab="", bty="n", ylim=c(0,8))
-axis.POSIXct(side=1, x=lvlsplFA, at=lvlsplFA, format ="%d %b %y", labels=T, las=2)
-mtext(side=2, expression(paste("Fatty acid 22:6", omega, "3 (%)")), las=3, line=2.5, cex=0.8)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
+mtext(side=2, expression(paste("Fatty acid 22:6", omega, "3 (% of total FA)")), las=3, line=2.5, cex=0.8)
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean) + tapply(var[sexFA=="F"], splFA[sexFA=="F"], sd), x1=lvlsplFA, y1=tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean) - tapply(var[sexFA=="F"], splFA[sexFA=="F"], sd), length=0.03, angle=90, code=3)
 arrows(x0=lvlsplFA, y0=tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean) + tapply(var[sexFA=="M"], splFA[sexFA=="M"], sd), x1=lvlsplFA, y1=tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean) - tapply(var[sexFA=="M"], splFA[sexFA=="M"], sd), length=0.03, angle=90, code=3)
 lines(lvlsplFA, tapply(var[sexFA=="F"], splFA[sexFA=="F"], mean))
@@ -287,6 +306,7 @@ points(lvlsplFA, tapply(var[sexFA=="M"], splFA[sexFA=="M"], mean), pch=21, col="
 legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"), bty="n", pt.cex=2, inset=c(0.03,0))
 
 ```
+
 
 # Carotenoids
 ## Total carotenoids description
@@ -312,8 +332,8 @@ par(las=1, mar=c(5,5,1,2), mfrow=c(1,1))
 
 plot(splPIG, var, type="n", xaxt="n", xlab="", ylab="", ylim=c(0, 4), bty="n")
 
-mtext(text=expression(paste("Total carotenoids (mg ", g^-1, ")")), side=2, las=3, line=2.5, cex=1)
-axis.POSIXct(side=1, x=lvlsplPIG, at=lvlsplPIG, format ="%d %b %y", labels=T, las=2)
+mtext(text=expression(paste("Total carotenoids (mg ", g^-1, " dw)")), side=2, las=3, line=2.5, cex=1)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
 
 arrows(x0=lvlsplPIG, y0=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) + tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), x1=lvlsplPIG, y1=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) - tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), length=0.03, angle=90, code=3)
 
@@ -328,9 +348,6 @@ points(lvlsplPIG, tapply(var[sexPIG=="M"], as.factor(substring(pig$Id[sexPIG=="M
 legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"), bty="n", pt.cex=2, inset=c(0.02,0))
 ```
 
-Note that figure 6 was compiled with an assemblage of various figures and outputs from the HPLC software. 
-
-As the figure is only a graphical representation of chromatograms the code is of poor interest and thus, not provided.
 
 ## Convert table to relative abundances (%)
 
@@ -342,9 +359,31 @@ head(PIGprct)
 ```
 
 ## Permutational analysis of variance on carotenoid assemblages
+
+Let's first verify if variances are homogeneous
+
 ```{r}
-adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
+PIGvar=betadisper(vegdist(PIGprct), paste(sexPIG, as.factor(splPIG)))
+permutest(PIGvar)
+
 ```
+
+Let's check if there are significant differences in carotenoid profiles between sampling events.
+```{r}
+
+adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
+adonis2(pig[, -c(1:5)]~sexPIG*as.factor(splPIG), method="bray")
+
+```
+
+As the interaction term is significant both sexes will be considered separately.
+
+```{r}
+adonis2(PIGprct[sexPIG=="F",]~as.factor(splPIG)[sexPIG=="F"], method="bray")
+adonis2(PIGprct[sexPIG=="M",]~as.factor(splPIG)[sexPIG=="M"], method="bray")
+
+```
+
 ## Summary table
 ```{r}
 moyPig=data.frame(M=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG), mean), SD=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG),sd), le=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG),length))
@@ -363,7 +402,7 @@ var=PIGprct[, 5]
 plot(splPIG, var, xaxt="n", ylab="", xlab="", bty="n", ylim=c(0,100), type="n")
 mtext(side=2, text="Astaxanthin (%)", las=3, line=2.5, cex=1.2)
 
-axis.POSIXct(side=1, x=lvlsplPIG, at=lvlsplPIG, format ="%d %b %y", labels=T, las=2)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
 
 arrows(x0=lvlsplPIG, y0=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) + tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), x1=lvlsplPIG, y1=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) - tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), length=0.03, angle=90, code=3)
 
@@ -377,12 +416,15 @@ points(lvlsplPIG, tapply(var[sexPIG=="M"], as.factor(substring(pig$Id[sexPIG=="M
 
 legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"), bty="n", pt.cex=2, inset=c(0.02, -0.05))
 
+
+
 var=apply(cbind(PIGprct[, 1], PIGprct[, 2]), 1, sum)
+
 
 plot(splPIG, var, xaxt="n", ylab="", xlab="", bty="n", ylim=c(0,100), type="n")
 mtext(side=2, text="Canthaxanthin + isomer (%)", las=3, line=2.5, cex=1.2)
 
-axis.POSIXct(side=1, x=lvlsplPIG, at=lvlsplPIG, format ="%d %b %y", labels=T, las=2)
+axis.POSIXct(side=1, x=xdate, at=xdate, format ="%b %y", labels=T, las=2)
 
 arrows(x0=lvlsplPIG, y0=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) + tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), x1=lvlsplPIG, y1=tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), mean) - tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F"], 8,11)), sd), length=0.03, angle=90, code=3)
 
@@ -395,6 +437,7 @@ points(lvlsplPIG, tapply(var[sexPIG=="F"], as.factor(substring(pig$Id[sexPIG=="F
 points(lvlsplPIG, tapply(var[sexPIG=="M"], as.factor(substring(pig$Id[sexPIG=="M"], 8,11)), mean), pch=21, col="grey40", bg="white", cex=2)
 
 legend("topleft", legend=c("Female", "Male"), pch=21, pt.bg=c("black", "white"), bty="n", pt.cex=2, inset=c(0.02, -0.05))
+
 
 #dev.off()
 ```
