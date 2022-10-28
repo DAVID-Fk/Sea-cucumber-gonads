@@ -114,7 +114,7 @@ waerden.test(ig[sexPIG=="M"], splPIG[sexPIG=="M"])$statistics
 
 ## Gonad index visualisation
 
-<img src="Script_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-html/unnamed-chunk-4-1.png" style="width:600px; display: block; margin: auto;" />
 
 # Fatty acids
 ## Convert FA table to concentrations and relative abundances
@@ -250,7 +250,7 @@ waerden.test(totFA[sexFA=="M"], splFA[sexFA=="M"])$statistics
 ##   15.41114 10 0.1177758
 ```
 ## Total fatty acids visualisation
-<img src="Script_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-html/unnamed-chunk-7-1.png" style="width:600px; display: block; margin: auto;" />
 
 ## Permutational analysis of variance on fatty acids assemblages
 Lets check if there are significant differences in fatty acid profiles between sampling events.
@@ -289,7 +289,7 @@ dendro.fau=hclust(d.fau, method="ward.D")
 plot(dendro.fau, cex=0.2)
 ```
 
-<img src="Script_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-html/unnamed-chunk-9-1.png" style="width:600px; display: block; margin: auto;" />
 
 ```r
 #A classification into three groups seems appropriate 
@@ -298,7 +298,7 @@ cut=cutree(dendro.fau, k=3)
 
 ## Visual representation of Principal Correspondance Analysis on FA assemblages
 
-<img src="Script_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-html/unnamed-chunk-10-1.png" style="width:600px; display: block; margin: auto;" />
 Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
 
 ## Summary table
@@ -332,7 +332,7 @@ head(t(moyAG))
 ```
 
 ## Temporal changes in especially time-responsive FA
-<img src="Script_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-html/unnamed-chunk-12-1.png" style="width:600px; display: block; margin: auto;" />
 
 # Carotenoids
 ## Total carotenoids description
@@ -380,11 +380,7 @@ waerden.test(totPIG[sexPIG=="M"], splPIG[sexPIG=="M"])$statistics
 ```
 ## Total carotenoids visualisation
 
-<img src="Script_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
-
-Note that figure 6 was compiled with an assemblage of various figures and outputs from the HPLC software. 
-
-As the figure is only a graphical representation of chromatograms the code is of poor interest and thus, not provided.
+<img src="Script_files/figure-html/unnamed-chunk-14-1.png" style="width:600px; display: block; margin: auto;" />
 
 ## Convert table to relative abundances (%)
 
