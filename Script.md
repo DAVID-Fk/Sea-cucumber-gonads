@@ -1,74 +1,60 @@
----
-title: "Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)"
-author: "Frank DAVID"
-date: "2022-07-04"
-output:  
-  html_document:
-    keep_md: true
----
-
-
-
 ### R Markdown
 
-This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2022). 
+This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2022).
 
-## Preparing the toolbox
+Preparing the toolbox
+---------------------
 
 Let's begin by loading the libraries that we will require to run the analyses.
 
-
-```r
+``` r
 library(agricolae)
 library(vegan)
 library(ade4)
 ```
 
-## Loading the data
-We load both fatty acid and carotenoids data from the GitHub server.
-For details on line and column headings please check the readme file.
+Loading the data
+----------------
 
+We load both fatty acid and carotenoids data from the GitHub server. For details on line and column headings please check the readme file.
 
-```r
+``` r
 FA <- read.csv("https://raw.githubusercontent.com/DAVID-Fk/Sea-cucumber-gonads/main/FA_areas.csv", sep=",", header=T)
 pig <- read.csv("https://raw.githubusercontent.com/DAVID-Fk/Sea-cucumber-gonads/main/Pig_conc.csv", sep=",", header=T)
 ```
 
-# Reproductive cycle
-## Gonad index
+Reproductive cycle
+==================
+
+Gonad index
+-----------
+
 Let's first describe seasonal variations of gonad index
 
-
-```r
+``` r
 # Number of individuals per sex
 sexPIG <- as.factor(substring(pig[,1], 4, 4))
 summary(sexPIG)
 ```
 
-```
-##  F  M 
-## 61 55
-```
+    ##  F  M 
+    ## 61 55
 
-```r
+``` r
 # Range of individuals weight
 range(pig$Idweight)
 ```
 
-```
-## [1]  71.12 223.10
-```
+    ## [1]  71.12 223.10
 
-```r
+``` r
 # Range of gonad weight
 range(pig$Gonadwt)
 ```
 
-```
-## [1]  1.22 64.24
-```
+    ## [1]  1.22 64.24
 
-```r
+``` r
 # Gonad index and average gonad index per sampling event
 ig <- pig$Gonadwt/pig$Idweight*100
 
@@ -79,87 +65,79 @@ lvlsplPIG <- as.POSIXct(levels(as.factor(splPIG)), format="%Y-%m-%d")
 max(tapply(ig, paste(sexPIG, splPIG), mean))
 ```
 
-```
-## [1] 32.9815
-```
+    ## [1] 32.9815
 
-```r
+``` r
 # Sampling event with lowest mean gonad weight
 min(tapply(ig, paste(sexPIG, splPIG), mean))
 ```
 
-```
-## [1] 2.232439
-```
+    ## [1] 2.232439
 
-```r
+``` r
 # Significance of gonad weight differences between sampling events in females 
 waerden.test(ig[sexPIG=="F"], splPIG[sexPIG=="F"])$statistics
 ```
 
-```
-##      Chisq Df      p.chisq
-##   42.64812 13 5.128724e-05
-```
+    ##      Chisq Df      p.chisq
+    ##   42.64812 13 5.128724e-05
 
-```r
+``` r
 # In males 
 waerden.test(ig[sexPIG=="M"], splPIG[sexPIG=="M"])$statistics
 ```
 
-```
-##      Chisq Df      p.chisq
-##   38.43149 13 0.0002462796
-```
+    ##      Chisq Df      p.chisq
+    ##   38.43149 13 0.0002462796
 
-## Gonad index visualisation
+Gonad index visualisation
+-------------------------
 
-<img src="Script_files/figure-html/unnamed-chunk-4-1.png" style="width:600px; display: block; margin: auto;" />
+<img src="Script_files/figure-markdown_github/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
-# Fatty acids
-## Convert FA table to concentrations and relative abundances
+Fatty acids
+===========
 
-We assign the value of 0 to fatty acids below detection levels.  
+Convert FA table to concentrations and relative abundances
+----------------------------------------------------------
 
+We assign the value of 0 to fatty acids below detection levels.
 
-```r
+``` r
 FA[is.na(FA)] <- 0
 FAprct <- FA[, -c(1:6, which(colnames(FA)=="C23.0"))]/rowSums(FA[, -c(1:6, which(colnames(FA)=="C23.0"))])*100
 rownames(FAprct) <- FA[,1]
 head(FAprct[, c(1:7)])
 ```
 
-```
-##             C14.0iso    C14.0 C15.0iso C15.0anteiso    C15.0 C16.0iso    C16.0
-## GO_F01GL12 1.2004386 4.816183 3.592659     1.491891 1.292780 1.933399 9.793963
-## GO_F01GL13 0.9987054 6.029221 3.883854     1.313113 1.479564 2.274829 8.618458
-## GO_F01GL18 1.2962615 4.837498 4.100132     1.559271 1.427766 2.132256 8.251926
-## GO_F02GL12 1.6473205 5.949816 4.650031     1.709877 1.508306 2.085216 8.737054
-## GO_F03GL12 1.3978371 4.763000 3.675794     1.357570 1.173493 1.892545 8.053382
-## GO_F03GL17 1.3971797 6.302448 3.823860     1.410157 1.414482 2.002768 9.261182
-```
+    ##             C14.0iso    C14.0 C15.0iso C15.0anteiso    C15.0 C16.0iso    C16.0
+    ## GO_F01GL12 1.2004386 4.816183 3.592659     1.491891 1.292780 1.933399 9.793963
+    ## GO_F01GL13 0.9987054 6.029221 3.883854     1.313113 1.479564 2.274829 8.618458
+    ## GO_F01GL18 1.2962615 4.837498 4.100132     1.559271 1.427766 2.132256 8.251926
+    ## GO_F02GL12 1.6473205 5.949816 4.650031     1.709877 1.508306 2.085216 8.737054
+    ## GO_F03GL12 1.3978371 4.763000 3.675794     1.357570 1.173493 1.892545 8.053382
+    ## GO_F03GL17 1.3971797 6.302448 3.823860     1.410157 1.414482 2.002768 9.261182
 
-```r
+``` r
 FAconc <- FA[, -c(1:6, which(colnames(FA)=="C23.0"))]/FA$C23.0*FA$StdC23/FA$splMass
 rownames(FAconc) <- FA[,1]
 head(FAconc[, c(1:6)])
 ```
 
-```
-##             C14.0iso    C14.0 C15.0iso C15.0anteiso     C15.0 C16.0iso
-## GO_F01GL12 1.3084847 5.249666 3.916018    1.6261697 1.4091374 2.107415
-## GO_F01GL13 0.6556780 3.958352 2.549859    0.8620951 0.9713748 1.493489
-## GO_F01GL18 0.7657095 2.857539 2.421973    0.9210709 0.8433902 1.259537
-## GO_F02GL12 1.2193867 4.404198 3.442066    1.2656925 1.1164849 1.543527
-## GO_F03GL12 0.9818182 3.345455 2.581818    0.9535354 0.8242424 1.329293
-## GO_F03GL17 0.9951245 4.488843 2.723499    1.0043671 1.0074480 1.426448
-```
+    ##             C14.0iso    C14.0 C15.0iso C15.0anteiso     C15.0 C16.0iso
+    ## GO_F01GL12 1.3084847 5.249666 3.916018    1.6261697 1.4091374 2.107415
+    ## GO_F01GL13 0.6556780 3.958352 2.549859    0.8620951 0.9713748 1.493489
+    ## GO_F01GL18 0.7657095 2.857539 2.421973    0.9210709 0.8433902 1.259537
+    ## GO_F02GL12 1.2193867 4.404198 3.442066    1.2656925 1.1164849 1.543527
+    ## GO_F03GL12 0.9818182 3.345455 2.581818    0.9535354 0.8242424 1.329293
+    ## GO_F03GL17 0.9951245 4.488843 2.723499    1.0043671 1.0074480 1.426448
 
+Total fatty acids description
+-----------------------------
 
-## Total fatty acids description
 We will begin with the description of seasonal variations of total fatty acids
 
-```r
+``` r
 # Total sum of fatty acids
 totFA=rowSums(FAconc)
 
@@ -172,114 +150,174 @@ lvlsplFA <- as.POSIXct(levels(as.factor(splFA)), format="%Y-%m-%d")
 by(totFA, sexFA, mean)
 ```
 
-```
-## sexFA: F
-## [1] 72.43366
-## ------------------------------------------------------------ 
-## sexFA: M
-## [1] 36.89894
-```
+    ## sexFA: F
+    ## [1] 72.43366
+    ## ------------------------------------------------------------ 
+    ## sexFA: M
+    ## [1] 36.89894
 
-```r
+``` r
 # Standard deviation of total FA per sex 
 by(totFA, sexFA, sd)
 ```
 
-```
-## sexFA: F
-## [1] 15.73603
-## ------------------------------------------------------------ 
-## sexFA: M
-## [1] 7.875067
-```
+    ## sexFA: F
+    ## [1] 15.73603
+    ## ------------------------------------------------------------ 
+    ## sexFA: M
+    ## [1] 7.875067
 
-```r
+``` r
 # Sampling event with highest total FA concentration
 max(tapply(totFA, paste(sexFA, splFA), mean))
 ```
 
-```
-## [1] 90.52121
-```
+    ## [1] 90.52121
 
-```r
+``` r
 # Sampling event with lowest total FA concentration
 min(tapply(totFA, paste(sexFA, splFA), mean))
 ```
 
-```
-## [1] 23.3665
-```
+    ## [1] 23.3665
 
-```r
+``` r
 # Sexual comparison of total FA concentration 
 t.test(totFA~sexFA)
 ```
 
-```
-## 
-## 	Welch Two Sample t-test
-## 
-## data:  totFA by sexFA
-## t = 14.088, df = 74.027, p-value < 2.2e-16
-## alternative hypothesis: true difference in means between group F and group M is not equal to 0
-## 95 percent confidence interval:
-##  30.50899 40.56045
-## sample estimates:
-## mean in group F mean in group M 
-##        72.43366        36.89894
-```
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  totFA by sexFA
+    ## t = 14.088, df = 74.027, p-value < 2.2e-16
+    ## alternative hypothesis: true difference in means between group F and group M is not equal to 0
+    ## 95 percent confidence interval:
+    ##  30.50899 40.56045
+    ## sample estimates:
+    ## mean in group F mean in group M 
+    ##        72.43366        36.89894
 
-```r
+``` r
 # Significance of total FA concentration differences between sampling events in females 
 waerden.test(totFA[sexFA=="F"], splFA[sexFA=="F"])$statistics
 ```
 
-```
-##      Chisq Df     p.chisq
-##   27.70815 10 0.002009942
+    ##      Chisq Df     p.chisq
+    ##   27.70815 10 0.002009942
+
+``` r
+# Let's see if removing the extreme point (April 2021) changes the result of the test
+waerden.test(totFA[sexFA=="F"&splFA!="2021-04-01 CEST"], splFA[sexFA=="F"&splFA!="2021-04-01 CEST"])$statistics
 ```
 
-```r
+    ##      Chisq Df    p.chisq
+    ##   18.10627  9 0.03396041
+
+``` r
 # In males
 waerden.test(totFA[sexFA=="M"], splFA[sexFA=="M"])$statistics
 ```
 
-```
-##      Chisq Df   p.chisq
-##   15.41114 10 0.1177758
-```
-## Total fatty acids visualisation
-<img src="Script_files/figure-html/unnamed-chunk-7-1.png" style="width:600px; display: block; margin: auto;" />
+    ##      Chisq Df   p.chisq
+    ##   15.41114 10 0.1177758
 
-## Permutational analysis of variance on fatty acids assemblages
-Lets check if there are significant differences in fatty acid profiles between sampling events.
+Total fatty acids visualisation
+-------------------------------
 
-```r
+<img src="Script_files/figure-markdown_github/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+
+Permutational analysis of variance on fatty acids assemblages
+-------------------------------------------------------------
+
+Let's first verify if variances are homogenous
+
+``` r
+FAvar=betadisper(vegdist(FAprct), paste(sexFA, as.factor(splFA)))
+```
+
+    ## Warning in betadisper(vegdist(FAprct), paste(sexFA, as.factor(splFA))): some
+    ## squared distances are negative and changed to zero
+
+``` r
+permutest(FAvar)
+```
+
+    ## 
+    ## Permutation test for homogeneity of multivariate dispersions
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## Response: Distances
+    ##           Df   Sum Sq    Mean Sq     F N.Perm Pr(>F)  
+    ## Groups    21 0.018010 0.00085760 1.615    999  0.065 .
+    ## Residuals 72 0.038233 0.00053101                      
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Let's check if there are significant differences in fatty acid profiles between sampling events.
+
+``` r
 adonis2(FAprct~sexFA*as.factor(splFA), method="bray")
 ```
 
-```
-## Permutation test for adonis under reduced model
-## Terms added sequentially (first to last)
-## Permutation: free
-## Number of permutations: 999
-## 
-## adonis2(formula = FAprct ~ sexFA * as.factor(splFA), method = "bray")
-##                        Df SumOfSqs      R2        F Pr(>F)    
-## sexFA                   1  1.43203 0.64743 382.7681  0.001 ***
-## as.factor(splFA)       10  0.35964 0.16260   9.6129  0.001 ***
-## sexFA:as.factor(splFA) 10  0.15082 0.06819   4.0312  0.001 ***
-## Residual               72  0.26937 0.12178                    
-## Total                  93  2.21185 1.00000                    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = FAprct ~ sexFA * as.factor(splFA), method = "bray")
+    ##                        Df SumOfSqs      R2        F Pr(>F)    
+    ## sexFA                   1  1.43203 0.64743 382.7681  0.001 ***
+    ## as.factor(splFA)       10  0.35964 0.16260   9.6129  0.001 ***
+    ## sexFA:as.factor(splFA) 10  0.15082 0.06819   4.0312  0.001 ***
+    ## Residual               72  0.26937 0.12178                    
+    ## Total                  93  2.21185 1.00000                    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+As the interaction term is significant both sexes will be considered separately.
+
+``` r
+adonis2(FAprct[which(sexFA=="F"),]~as.factor(splFA[which(sexFA=="F")]), method="bray")
 ```
 
-## Hierarchical clustering
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = FAprct[which(sexFA == "F"), ] ~ as.factor(splFA[which(sexFA == "F")]), method = "bray")
+    ##                                       Df SumOfSqs      R2     F Pr(>F)    
+    ## as.factor(splFA[which(sexFA == "F")]) 10  0.19223 0.53912 4.562  0.001 ***
+    ## Residual                              39  0.16433 0.46088                 
+    ## Total                                 49  0.35656 1.00000                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+adonis2(FAprct[which(sexFA=="M"),]~as.factor(splFA[which(sexFA=="M")]), method="bray")
+```
+
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = FAprct[which(sexFA == "M"), ] ~ as.factor(splFA[which(sexFA == "M")]), method = "bray")
+    ##                                       Df SumOfSqs      R2     F Pr(>F)    
+    ## as.factor(splFA[which(sexFA == "M")]) 10  0.31823 0.75184 9.998  0.001 ***
+    ## Residual                              33  0.10504 0.24816                 
+    ## Total                                 43  0.42327 1.00000                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Hierarchical clustering
+-----------------------
+
 We will cluster gonads into groups
 
-```r
+``` r
 # Calculation of Bray-Curtis distance matrix based on relative FA abundances
 d.fau=vegdist(FAprct, method="bray")
 
@@ -289,21 +327,22 @@ dendro.fau=hclust(d.fau, method="ward.D")
 plot(dendro.fau, cex=0.2)
 ```
 
-<img src="Script_files/figure-html/unnamed-chunk-9-1.png" style="width:600px; display: block; margin: auto;" />
+<img src="Script_files/figure-markdown_github/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
 
-```r
+``` r
 #A classification into three groups seems appropriate 
 cut=cutree(dendro.fau, k=3)
 ```
 
-## Visual representation of Principal Correspondance Analysis on FA assemblages
+Visual representation of Principal Correspondance Analysis on FA assemblages
+----------------------------------------------------------------------------
 
-<img src="Script_files/figure-html/unnamed-chunk-10-1.png" style="width:600px; display: block; margin: auto;" />
-Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
+<img src="Script_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /> Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
 
-## Summary table
+Summary table
+-------------
 
-```r
+``` r
 # Sums of fatty acids
 
 brFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C14.0iso"), which(colnames(FAprct)=="C15.0iso"), which(colnames(FAprct)=="C15.0anteiso"), which(colnames(FAprct)=="C16.0iso"), which(colnames(FAprct)=="C17.0iso"), which(colnames(FAprct)=="C17.0anteiso"))])
@@ -313,7 +352,7 @@ w3=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.3w3"), which(colnames(FAprct)
 w6=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.2w6"), which(colnames(FAprct)=="C20.2w6"), which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"), which(colnames(FAprct)=="C22.5w6"))])
 LCMUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w11"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w11"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
 MUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C16.1w7"), which(colnames(FAprct)=="C18.1w9"), which(colnames(FAprct)=="C18.1w7"), which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w11"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w11"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
-HUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.2w6"), which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"),which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.5w6"), which(colnames(FAprct)=="C22.6w3"))])
+HUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"),which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.5w6"), which(colnames(FAprct)=="C22.6w3"))])
 
 prfull=cbind(FAprct, brFA, PUFA, SFA, MUFA, LCMUFA, w3, w6, HUFA, totFA)
 moyAG=data.frame(M=aggregate(prfull, by=list(cut), mean), SD=aggregate(prfull, by=list(cut),sd))
@@ -321,23 +360,26 @@ moyAG=data.frame(M=aggregate(prfull, by=list(cut), mean), SD=aggregate(prfull, b
 head(t(moyAG))
 ```
 
-```
-##                    [,1]      [,2]       [,3]
-## M.Group.1      1.000000 2.0000000 3.00000000
-## M.C14.0iso     1.278230 0.4949711 0.06644387
-## M.C14.0        5.427584 2.6434784 0.75367521
-## M.C15.0iso     3.875104 1.8682050 0.61770342
-## M.C15.0anteiso 1.436755 0.6473241 0.11634275
-## M.C15.0        1.373719 0.7492566 0.25442934
-```
+    ##                    [,1]      [,2]       [,3]
+    ## M.Group.1      1.000000 2.0000000 3.00000000
+    ## M.C14.0iso     1.278230 0.4949711 0.06644387
+    ## M.C14.0        5.427584 2.6434784 0.75367521
+    ## M.C15.0iso     3.875104 1.8682050 0.61770342
+    ## M.C15.0anteiso 1.436755 0.6473241 0.11634275
+    ## M.C15.0        1.373719 0.7492566 0.25442934
 
-## Temporal changes in especially time-responsive FA
-<img src="Script_files/figure-html/unnamed-chunk-12-1.png" style="width:600px; display: block; margin: auto;" />
+Temporal changes in especially time-responsive FA
+-------------------------------------------------
 
-# Carotenoids
-## Total carotenoids description
+<img src="Script_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
-```r
+Carotenoids
+===========
+
+Total carotenoids description
+-----------------------------
+
+``` r
 # Total sum of carotenoids
 totPIG=apply(pig[, -c(1:5)],1,sum)
 
@@ -345,116 +387,191 @@ totPIG=apply(pig[, -c(1:5)],1,sum)
 t.test(totPIG~sexPIG)
 ```
 
-```
-## 
-## 	Welch Two Sample t-test
-## 
-## data:  totPIG by sexPIG
-## t = 13.17, df = 97.691, p-value < 2.2e-16
-## alternative hypothesis: true difference in means between group F and group M is not equal to 0
-## 95 percent confidence interval:
-##  1.117734 1.514359
-## sample estimates:
-## mean in group F mean in group M 
-##       1.7730011       0.4569545
-```
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  totPIG by sexPIG
+    ## t = 13.17, df = 97.691, p-value < 2.2e-16
+    ## alternative hypothesis: true difference in means between group F and group M is not equal to 0
+    ## 95 percent confidence interval:
+    ##  1.117734 1.514359
+    ## sample estimates:
+    ## mean in group F mean in group M 
+    ##       1.7730011       0.4569545
 
-```r
+``` r
 # Significance of total pigments concentration differences between sampling events in females 
 waerden.test(totPIG[sexPIG=="F"], splPIG[sexPIG=="F"])$statistics
 ```
 
-```
-##      Chisq Df   p.chisq
-##   18.36775 13 0.1440487
-```
+    ##      Chisq Df   p.chisq
+    ##   18.36775 13 0.1440487
 
-```r
+``` r
 # In males
 waerden.test(totPIG[sexPIG=="M"], splPIG[sexPIG=="M"])$statistics
 ```
 
-```
-##      Chisq Df  p.chisq
-##   17.20256 13 0.190209
-```
-## Total carotenoids visualisation
+    ##      Chisq Df  p.chisq
+    ##   17.20256 13 0.190209
 
-<img src="Script_files/figure-html/unnamed-chunk-14-1.png" style="width:600px; display: block; margin: auto;" />
+Total carotenoids visualisation
+-------------------------------
 
-## Convert table to relative abundances (%)
+<img src="Script_files/figure-markdown_github/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
 
+Convert table to relative abundances (%)
+----------------------------------------
 
-```r
+``` r
 PIGprct <-pig[, -c(1:5)]/rowSums(pig[, -c(1:5)])*100
 rownames(PIGprct) <- pig[,1]
 head(PIGprct)
 ```
 
-```
-##                Cant1 Canthaxanthin     Echi1 Echinenone Astaxanthin
-## GO_F01_GL12 3.912978      14.92439 0.4552332  0.3772876    80.33011
-## GO_F01_GL13 4.606107      15.07756 0.2323710  0.2678332    79.81612
-## GO_F01_GL18 4.441548      14.01515 0.3450101  0.3297318    80.86856
-## GO_F01_GL19 4.755388      14.16280 0.4436790  0.2437262    80.39440
-## GO_F01_GL22 3.803644      17.25185 0.4941566  0.4046920    78.04566
-## GO_F02_GL12 4.205364      15.45455 0.3591382  0.3974252    79.58352
+    ##                Cant1 Canthaxanthin     Echi1 Echinenone Astaxanthin
+    ## GO_F01_GL12 3.912978      14.92439 0.4552332  0.3772876    80.33011
+    ## GO_F01_GL13 4.606107      15.07756 0.2323710  0.2678332    79.81612
+    ## GO_F01_GL18 4.441548      14.01515 0.3450101  0.3297318    80.86856
+    ## GO_F01_GL19 4.755388      14.16280 0.4436790  0.2437262    80.39440
+    ## GO_F01_GL22 3.803644      17.25185 0.4941566  0.4046920    78.04566
+    ## GO_F02_GL12 4.205364      15.45455 0.3591382  0.3974252    79.58352
+
+Permutational analysis of variance on carotenoid assemblages
+------------------------------------------------------------
+
+Let's first verify if variances are homogeneous
+
+``` r
+PIGvar=betadisper(vegdist(PIGprct), paste(sexPIG, as.factor(splPIG)))
 ```
 
-## Permutational analysis of variance on carotenoid assemblages
+    ## Warning in betadisper(vegdist(PIGprct), paste(sexPIG, as.factor(splPIG))): some
+    ## squared distances are negative and changed to zero
 
-```r
+``` r
+permutest(PIGvar)
+```
+
+    ## 
+    ## Permutation test for homogeneity of multivariate dispersions
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## Response: Distances
+    ##           Df   Sum Sq   Mean Sq      F N.Perm Pr(>F)
+    ## Groups    27 0.056365 0.0020876 1.4521    999   0.11
+    ## Residuals 88 0.126510 0.0014376
+
+Let's check if there are significant differences in carotenoid profiles between sampling events.
+
+``` r
 adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
 ```
 
-```
-## Permutation test for adonis under reduced model
-## Terms added sequentially (first to last)
-## Permutation: free
-## Number of permutations: 999
-## 
-## adonis2(formula = PIGprct ~ sexPIG * as.factor(splPIG), method = "bray")
-##                           Df SumOfSqs      R2       F Pr(>F)    
-## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
-## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.002 ** 
-## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.003 ** 
-## Residual                  88  0.30689 0.34086                   
-## Total                    115  0.90034 1.00000                   
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-```
-## Summary table
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = PIGprct ~ sexPIG * as.factor(splPIG), method = "bray")
+    ##                           Df SumOfSqs      R2       F Pr(>F)    
+    ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
+    ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
+    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.004 ** 
+    ## Residual                  88  0.30689 0.34086                   
+    ## Total                    115  0.90034 1.00000                   
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-```r
+``` r
+adonis2(pig[, -c(1:5)]~sexPIG*as.factor(splPIG), method="bray")
+```
+
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = pig[, -c(1:5)] ~ sexPIG * as.factor(splPIG), method = "bray")
+    ##                           Df SumOfSqs      R2        F Pr(>F)    
+    ## sexPIG                     1   8.2904 0.49348 122.0428  0.001 ***
+    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.166    
+    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.068 .  
+    ## Residual                  88   5.9779 0.35583                    
+    ## Total                    115  16.7999 1.00000                    
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+As the interaction term is significant both sexes will be considered separately.
+
+``` r
+adonis2(PIGprct[sexPIG=="F",]~as.factor(splPIG)[sexPIG=="F"], method="bray")
+```
+
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = PIGprct[sexPIG == "F", ] ~ as.factor(splPIG)[sexPIG == "F"], method = "bray")
+    ##                                  Df SumOfSqs     R2      F Pr(>F)  
+    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.024 *
+    ## Residual                         47 0.040800 0.6242                
+    ## Total                            60 0.065363 1.0000                
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+``` r
+adonis2(PIGprct[sexPIG=="M",]~as.factor(splPIG)[sexPIG=="M"], method="bray")
+```
+
+    ## Permutation test for adonis under reduced model
+    ## Terms added sequentially (first to last)
+    ## Permutation: free
+    ## Number of permutations: 999
+    ## 
+    ## adonis2(formula = PIGprct[sexPIG == "M", ] ~ as.factor(splPIG)[sexPIG == "M"], method = "bray")
+    ##                                  Df SumOfSqs    R2      F Pr(>F)   
+    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.005 **
+    ## Residual                         41  0.26609 0.501                 
+    ## Total                            54  0.53111 1.000                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Summary table
+-------------
+
+``` r
 moyPig=data.frame(M=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG), mean), SD=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG),sd), le=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG),length))
 
 t(moyPig)
 ```
 
-```
-##                  [,1]         [,2]        
-## M.Group.1        "F"          "M"         
-## M.Cant1          "4.137059"   "5.805644"  
-## M.Canthaxanthin  "14.16871"   "22.81248"  
-## M.Echi1          "0.4721317"  "0.2463885" 
-## M.Echinenone     "0.4580230"  "0.2814552" 
-## M.Astaxanthin    "80.76407"   "70.85403"  
-## M.totPIG         "1.7730011"  "0.4569545" 
-## SD.Group.1       "F"          "M"         
-## SD.Cant1         "0.849205"   "2.260141"  
-## SD.Canthaxanthin "2.398863"   "7.828401"  
-## SD.Echi1         "0.23865549" "0.09887887"
-## SD.Echinenone    "0.2074604"  "0.1156214" 
-## SD.Astaxanthin   "3.186706"   "9.837141"  
-## SD.totPIG        "0.6669796"  "0.3848485" 
-## le.Group.1       "F"          "M"         
-## le.Cant1         "61"         "55"        
-## le.Canthaxanthin "61"         "55"        
-## le.Echi1         "61"         "55"        
-## le.Echinenone    "61"         "55"        
-## le.Astaxanthin   "61"         "55"        
-## le.totPIG        "61"         "55"
-```
+    ##                  [,1]         [,2]        
+    ## M.Group.1        "F"          "M"         
+    ## M.Cant1          "4.137059"   "5.805644"  
+    ## M.Canthaxanthin  "14.16871"   "22.81248"  
+    ## M.Echi1          "0.4721317"  "0.2463885" 
+    ## M.Echinenone     "0.4580230"  "0.2814552" 
+    ## M.Astaxanthin    "80.76407"   "70.85403"  
+    ## M.totPIG         "1.7730011"  "0.4569545" 
+    ## SD.Group.1       "F"          "M"         
+    ## SD.Cant1         "0.849205"   "2.260141"  
+    ## SD.Canthaxanthin "2.398863"   "7.828401"  
+    ## SD.Echi1         "0.23865549" "0.09887887"
+    ## SD.Echinenone    "0.2074604"  "0.1156214" 
+    ## SD.Astaxanthin   "3.186706"   "9.837141"  
+    ## SD.totPIG        "0.6669796"  "0.3848485" 
+    ## le.Group.1       "F"          "M"         
+    ## le.Cant1         "61"         "55"        
+    ## le.Canthaxanthin "61"         "55"        
+    ## le.Echi1         "61"         "55"        
+    ## le.Echinenone    "61"         "55"        
+    ## le.Astaxanthin   "61"         "55"        
+    ## le.totPIG        "61"         "55"
 
-## Temporal changes in the relative abundance of Astaxanthin and Canthaxanthins
-<img src="Script_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" />
+Temporal changes in the relative abundance of Astaxanthin and Canthaxanthins
+----------------------------------------------------------------------------
+
+<img src="Script_files/figure-markdown_github/unnamed-chunk-22-1.png" style="display: block; margin: auto;" />
