@@ -1,6 +1,6 @@
 ### R Markdown
 
-This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2022).
+This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2023).
 
 Preparing the toolbox
 ---------------------
@@ -368,10 +368,61 @@ head(t(moyAG))
     ## M.C15.0anteiso 1.436755 0.6473241 0.11634275
     ## M.C15.0        1.373719 0.7492566 0.25442934
 
-Temporal changes in especially time-responsive FA
--------------------------------------------------
+Signficant changes in especially time-responsive FA
+---------------------------------------------------
 
-<img src="Script_files/figure-markdown_github/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+``` r
+# Significance of 16:1w7 variations over time in females 
+waerden.test(FAprct[, which(colnames(FAprct)=="C16.1w7")][sexFA=="F"], splFA[sexFA=="F"])$statistics
+```
+
+    ##      Chisq Df     p.chisq
+    ##   27.29391 10 0.002339471
+
+``` r
+# Significance of 16:1w7 variations over time in males 
+waerden.test(FAprct[, which(colnames(FAprct)=="C16.1w7")][sexFA=="M"], splFA[sexFA=="M"])$statistics
+```
+
+    ##     Chisq Df      p.chisq
+    ##   35.1596 10 0.0001172709
+
+``` r
+# Significance of branched FA variations over time in females 
+waerden.test(brFA[sexFA=="F"], splFA[sexFA=="F"])$statistics
+```
+
+    ##     Chisq Df    p.chisq
+    ##   24.2938 10 0.00685761
+
+``` r
+# Significance of branched FA variations over time in males 
+waerden.test(brFA[sexFA=="M"], splFA[sexFA=="M"])$statistics
+```
+
+    ##      Chisq Df      p.chisq
+    ##   31.86498 10 0.0004217168
+
+``` r
+# Significance of 22:6w3 variations over time in females 
+waerden.test(FAprct[, which(colnames(FAprct)=="C22.6w3")][sexFA=="F"], splFA[sexFA=="F"])$statistics
+```
+
+    ##      Chisq Df      p.chisq
+    ##   29.68241 10 0.0009653009
+
+``` r
+# Significance of 22:6w3 variations over time in males 
+waerden.test(FAprct[, which(colnames(FAprct)=="C22.6w3")][sexFA=="M"], splFA[sexFA=="M"])$statistics
+```
+
+    ##      Chisq Df      p.chisq
+    ##   33.19646 10 0.0002524316
+
+Graphical visualisation of especially time-responsive FA
+--------------------------------------------------------
+
+<img src="Script_files/figure-markdown_github/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
 
 Carotenoids
 ===========
@@ -418,7 +469,7 @@ waerden.test(totPIG[sexPIG=="M"], splPIG[sexPIG=="M"])$statistics
 Total carotenoids visualisation
 -------------------------------
 
-<img src="Script_files/figure-markdown_github/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-markdown_github/unnamed-chunk-17-1.png" style="display: block; margin: auto;" />
 
 Convert table to relative abundances (%)
 ----------------------------------------
@@ -460,7 +511,7 @@ permutest(PIGvar)
     ## 
     ## Response: Distances
     ##           Df   Sum Sq   Mean Sq      F N.Perm Pr(>F)
-    ## Groups    27 0.056365 0.0020876 1.4521    999   0.11
+    ## Groups    27 0.056365 0.0020876 1.4521    999  0.105
     ## Residuals 88 0.126510 0.0014376
 
 Let's check if there are significant differences in carotenoid profiles between sampling events.
@@ -478,7 +529,7 @@ adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
     ##                           Df SumOfSqs      R2       F Pr(>F)    
     ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
     ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
-    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.004 ** 
+    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.001 ***
     ## Residual                  88  0.30689 0.34086                   
     ## Total                    115  0.90034 1.00000                   
     ## ---
@@ -496,8 +547,8 @@ adonis2(pig[, -c(1:5)]~sexPIG*as.factor(splPIG), method="bray")
     ## adonis2(formula = pig[, -c(1:5)] ~ sexPIG * as.factor(splPIG), method = "bray")
     ##                           Df SumOfSqs      R2        F Pr(>F)    
     ## sexPIG                     1   8.2904 0.49348 122.0428  0.001 ***
-    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.166    
-    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.068 .  
+    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.181    
+    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.066 .  
     ## Residual                  88   5.9779 0.35583                    
     ## Total                    115  16.7999 1.00000                    
     ## ---
@@ -516,7 +567,7 @@ adonis2(PIGprct[sexPIG=="F",]~as.factor(splPIG)[sexPIG=="F"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "F", ] ~ as.factor(splPIG)[sexPIG == "F"], method = "bray")
     ##                                  Df SumOfSqs     R2      F Pr(>F)  
-    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.024 *
+    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.018 *
     ## Residual                         47 0.040800 0.6242                
     ## Total                            60 0.065363 1.0000                
     ## ---
@@ -533,7 +584,7 @@ adonis2(PIGprct[sexPIG=="M",]~as.factor(splPIG)[sexPIG=="M"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "M", ] ~ as.factor(splPIG)[sexPIG == "M"], method = "bray")
     ##                                  Df SumOfSqs    R2      F Pr(>F)   
-    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.005 **
+    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.002 **
     ## Residual                         41  0.26609 0.501                 
     ## Total                            54  0.53111 1.000                 
     ## ---
@@ -574,4 +625,4 @@ t(moyPig)
 Temporal changes in the relative abundance of Astaxanthin and Canthaxanthins
 ----------------------------------------------------------------------------
 
-<img src="Script_files/figure-markdown_github/unnamed-chunk-22-1.png" style="display: block; margin: auto;" />
+<img src="Script_files/figure-markdown_github/unnamed-chunk-23-1.png" style="display: block; margin: auto;" />
