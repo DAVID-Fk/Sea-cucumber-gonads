@@ -1,6 +1,6 @@
 # Sea-cucumber-gonads
 
-This repository was created to upload the data that support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2022).
+This repository was created to upload the data that support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2023).
 
 It consists of two tables (fatty acid composition of gonads and carotenoid composition of gonads).
 
