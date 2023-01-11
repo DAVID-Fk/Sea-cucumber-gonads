@@ -250,7 +250,7 @@ permutest(FAvar)
     ## 
     ## Response: Distances
     ##           Df   Sum Sq    Mean Sq     F N.Perm Pr(>F)  
-    ## Groups    21 0.018010 0.00085760 1.615    999  0.065 .
+    ## Groups    21 0.018010 0.00085760 1.615    999  0.088 .
     ## Residuals 72 0.038233 0.00053101                      
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
@@ -368,8 +368,8 @@ head(t(moyAG))
     ## M.C15.0anteiso 1.436755 0.6473241 0.11634275
     ## M.C15.0        1.373719 0.7492566 0.25442934
 
-Signficant changes in especially time-responsive FA
----------------------------------------------------
+Significant changes in especially time-responsive FA
+----------------------------------------------------
 
 ``` r
 # Significance of 16:1w7 variations over time in females 
@@ -511,7 +511,7 @@ permutest(PIGvar)
     ## 
     ## Response: Distances
     ##           Df   Sum Sq   Mean Sq      F N.Perm Pr(>F)
-    ## Groups    27 0.056365 0.0020876 1.4521    999  0.105
+    ## Groups    27 0.056365 0.0020876 1.4521    999  0.103
     ## Residuals 88 0.126510 0.0014376
 
 Let's check if there are significant differences in carotenoid profiles between sampling events.
@@ -528,8 +528,8 @@ adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
     ## adonis2(formula = PIGprct ~ sexPIG * as.factor(splPIG), method = "bray")
     ##                           Df SumOfSqs      R2       F Pr(>F)    
     ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
-    ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
-    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.001 ***
+    ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.002 ** 
+    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.002 ** 
     ## Residual                  88  0.30689 0.34086                   
     ## Total                    115  0.90034 1.00000                   
     ## ---
@@ -547,8 +547,8 @@ adonis2(pig[, -c(1:5)]~sexPIG*as.factor(splPIG), method="bray")
     ## adonis2(formula = pig[, -c(1:5)] ~ sexPIG * as.factor(splPIG), method = "bray")
     ##                           Df SumOfSqs      R2        F Pr(>F)    
     ## sexPIG                     1   8.2904 0.49348 122.0428  0.001 ***
-    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.181    
-    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.066 .  
+    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.147    
+    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.075 .  
     ## Residual                  88   5.9779 0.35583                    
     ## Total                    115  16.7999 1.00000                    
     ## ---
@@ -567,7 +567,7 @@ adonis2(PIGprct[sexPIG=="F",]~as.factor(splPIG)[sexPIG=="F"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "F", ] ~ as.factor(splPIG)[sexPIG == "F"], method = "bray")
     ##                                  Df SumOfSqs     R2      F Pr(>F)  
-    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.018 *
+    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766   0.02 *
     ## Residual                         47 0.040800 0.6242                
     ## Total                            60 0.065363 1.0000                
     ## ---

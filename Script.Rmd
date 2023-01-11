@@ -1,7 +1,10 @@
 ---
-Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)
-Frank DAVID
-2022-07-04
+title: "Fatty acids and pigments in the gonads of _H. forskali_ (Holothuroidea)"
+author: "Frank DAVID"
+date: '2023-01-11'
+output:
+  md_document:
+    variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +14,7 @@ Sys.setlocale("LC_TIME", "C")
 
 ### R Markdown
 
-This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2022). 
+This R Markdown document is made to support the findings of the paper "Sex-specific seasonal variations in the fatty acid and carotenoid composition of sea cucumber gonads and implications for aquaculture" by David et al. (2023). 
 
 
 ## Preparing the toolbox
@@ -260,8 +263,33 @@ moyAG=data.frame(M=aggregate(prfull, by=list(cut), mean), SD=aggregate(prfull, b
 
 head(t(moyAG))
 ```
+## Significant changes in especially time-responsive FA
+```{r}
+# Significance of 16:1w7 variations over time in females 
+waerden.test(FAprct[, which(colnames(FAprct)=="C16.1w7")][sexFA=="F"], splFA[sexFA=="F"])$statistics
 
-## Temporal changes in especially time-responsive FA
+# Significance of 16:1w7 variations over time in males 
+waerden.test(FAprct[, which(colnames(FAprct)=="C16.1w7")][sexFA=="M"], splFA[sexFA=="M"])$statistics
+
+
+# Significance of branched FA variations over time in females 
+waerden.test(brFA[sexFA=="F"], splFA[sexFA=="F"])$statistics
+
+# Significance of branched FA variations over time in males 
+waerden.test(brFA[sexFA=="M"], splFA[sexFA=="M"])$statistics
+
+
+# Significance of 22:6w3 variations over time in females 
+waerden.test(FAprct[, which(colnames(FAprct)=="C22.6w3")][sexFA=="F"], splFA[sexFA=="F"])$statistics
+
+# Significance of 22:6w3 variations over time in males 
+waerden.test(FAprct[, which(colnames(FAprct)=="C22.6w3")][sexFA=="M"], splFA[sexFA=="M"])$statistics
+
+```
+
+
+
+## Graphical visualisation of especially time-responsive FA
 ```{r, fig.height=7, fig.width=4, fig.align="center", echo=FALSE}
 
 par(mfrow=c(3,1), mar=c(4,3,2,3), oma=c(2,2,0,0), las=2)
