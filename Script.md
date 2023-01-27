@@ -249,9 +249,11 @@ permutest(FAvar)
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##           Df   Sum Sq    Mean Sq      F N.Perm Pr(>F)
-    ## Groups    21 0.017510 0.00083383 1.5314    999  0.107
-    ## Residuals 72 0.039203 0.00054449
+    ##           Df   Sum Sq    Mean Sq      F N.Perm Pr(>F)  
+    ## Groups    21 0.017510 0.00083383 1.5314    999  0.091 .
+    ## Residuals 72 0.039203 0.00054449                       
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Let's check if there are significant differences in fatty acid profiles between sampling events.
 
@@ -350,8 +352,8 @@ SFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C14.0"), which(colnames(FAprct)=
 PUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.2w6"), which(colnames(FAprct)=="C18.3w3"), which(colnames(FAprct)=="C18.4w3"), which(colnames(FAprct)=="C20.2w6"), which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"),which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.5w6"), which(colnames(FAprct)=="C22.6w3"))])
 w3=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.3w3"), which(colnames(FAprct)=="C18.4w3"), which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.6w3"))])
 w6=rowSums(FAprct[, c(which(colnames(FAprct)=="C18.2w6"), which(colnames(FAprct)=="C20.2w6"), which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"), which(colnames(FAprct)=="C22.5w6"))])
-LCMUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w11"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w11"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
-MUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C16.1w7"), which(colnames(FAprct)=="C18.1w9"), which(colnames(FAprct)=="C18.1w7"), which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w11"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w11"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
+LCMUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
+MUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C16.1w7"), which(colnames(FAprct)=="C18.1w9"), which(colnames(FAprct)=="C18.1w7"), which(colnames(FAprct)=="C20.1w9"), which(colnames(FAprct)=="C20.1w7"), which(colnames(FAprct)=="C22.1w9"), which(colnames(FAprct)=="C23.1w9"), which(colnames(FAprct)=="C24.1w9"))])
 HUFA=rowSums(FAprct[, c(which(colnames(FAprct)=="C20.4w6"), which(colnames(FAprct)=="C20.3w6"),which(colnames(FAprct)=="C20.4w3"), which(colnames(FAprct)=="C20.5w3"), which(colnames(FAprct)=="C22.5w6"), which(colnames(FAprct)=="C22.6w3"))])
 
 prfull=cbind(FAprct, brFA, PUFA, SFA, MUFA, LCMUFA, w3, w6, HUFA, totFA)
@@ -510,9 +512,11 @@ permutest(PIGvar)
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##           Df   Sum Sq   Mean Sq      F N.Perm Pr(>F)
-    ## Groups    27 0.056365 0.0020876 1.4521    999  0.105
-    ## Residuals 88 0.126510 0.0014376
+    ##           Df   Sum Sq   Mean Sq      F N.Perm Pr(>F)  
+    ## Groups    27 0.056365 0.0020876 1.4521    999  0.098 .
+    ## Residuals 88 0.126510 0.0014376                       
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Let's check if there are significant differences in carotenoid profiles between sampling events.
 
@@ -529,7 +533,7 @@ adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
     ##                           Df SumOfSqs      R2       F Pr(>F)    
     ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
     ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
-    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.004 ** 
+    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.003 ** 
     ## Residual                  88  0.30689 0.34086                   
     ## Total                    115  0.90034 1.00000                   
     ## ---
@@ -547,8 +551,8 @@ adonis2(pig[, -c(1:5)]~sexPIG*as.factor(splPIG), method="bray")
     ## adonis2(formula = pig[, -c(1:5)] ~ sexPIG * as.factor(splPIG), method = "bray")
     ##                           Df SumOfSqs      R2        F Pr(>F)    
     ## sexPIG                     1   8.2904 0.49348 122.0428  0.001 ***
-    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.147    
-    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.069 .  
+    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.160    
+    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.047 *  
     ## Residual                  88   5.9779 0.35583                    
     ## Total                    115  16.7999 1.00000                    
     ## ---
@@ -567,7 +571,7 @@ adonis2(PIGprct[sexPIG=="F",]~as.factor(splPIG)[sexPIG=="F"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "F", ] ~ as.factor(splPIG)[sexPIG == "F"], method = "bray")
     ##                                  Df SumOfSqs     R2      F Pr(>F)  
-    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.026 *
+    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.025 *
     ## Residual                         47 0.040800 0.6242                
     ## Total                            60 0.065363 1.0000                
     ## ---
@@ -584,7 +588,7 @@ adonis2(PIGprct[sexPIG=="M",]~as.factor(splPIG)[sexPIG=="M"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "M", ] ~ as.factor(splPIG)[sexPIG == "M"], method = "bray")
     ##                                  Df SumOfSqs    R2      F Pr(>F)   
-    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.004 **
+    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.002 **
     ## Residual                         41  0.26609 0.501                 
     ## Total                            54  0.53111 1.000                 
     ## ---
