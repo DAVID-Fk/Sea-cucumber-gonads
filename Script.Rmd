@@ -243,6 +243,7 @@ legend("topright", legend=c("Cluster 1", "Cluster 2", "Cluster 3"), pch=c(21, 22
 
 #dev.off()
 ```
+
 Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
 
 ## Summary table
