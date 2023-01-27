@@ -219,9 +219,8 @@ cut=cutree(dendro.fau, k=3)
 ```{r, echo=FALSE, fig.width=9, fig.height=6, fig.align="center"}
 
 pcoa=dudi.pco(cailliez(vegdist(FAprct, method="bray")), scannf = F, nf = 2)
-pcoa$li[,2]
 
-#svg("PCoA2.svg", width=9,height=6)
+#svg("PCoA.svg", width=9,height=6)
 par(las=1, mar=c(4,5,1,2), mfrow=c(1,1))
 
 plot(pcoa$li, pcoa$co, type="n", ann=F, bty="n")
