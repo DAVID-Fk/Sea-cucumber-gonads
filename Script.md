@@ -249,9 +249,9 @@ permutest(FAvar)
     ## Number of permutations: 999
     ## 
     ## Response: Distances
-    ##           Df   Sum Sq    Mean Sq     F N.Perm Pr(>F)  
-    ## Groups    21 0.018010 0.00085760 1.615    999  0.088 .
-    ## Residuals 72 0.038233 0.00053101                      
+    ##           Df   Sum Sq    Mean Sq      F N.Perm Pr(>F)  
+    ## Groups    21 0.017510 0.00083383 1.5314    999  0.084 .
+    ## Residuals 72 0.039203 0.00054449                       
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -268,11 +268,11 @@ adonis2(FAprct~sexFA*as.factor(splFA), method="bray")
     ## 
     ## adonis2(formula = FAprct ~ sexFA * as.factor(splFA), method = "bray")
     ##                        Df SumOfSqs      R2        F Pr(>F)    
-    ## sexFA                   1  1.43203 0.64743 382.7681  0.001 ***
-    ## as.factor(splFA)       10  0.35964 0.16260   9.6129  0.001 ***
-    ## sexFA:as.factor(splFA) 10  0.15082 0.06819   4.0312  0.001 ***
-    ## Residual               72  0.26937 0.12178                    
-    ## Total                  93  2.21185 1.00000                    
+    ## sexFA                   1  1.41500 0.65014 388.1570  0.001 ***
+    ## as.factor(splFA)       10  0.35128 0.16140   9.6362  0.001 ***
+    ## sexFA:as.factor(splFA) 10  0.14771 0.06787   4.0520  0.001 ***
+    ## Residual               72  0.26247 0.12060                    
+    ## Total                  93  2.17647 1.00000                    
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -288,10 +288,10 @@ adonis2(FAprct[which(sexFA=="F"),]~as.factor(splFA[which(sexFA=="F")]), method="
     ## Number of permutations: 999
     ## 
     ## adonis2(formula = FAprct[which(sexFA == "F"), ] ~ as.factor(splFA[which(sexFA == "F")]), method = "bray")
-    ##                                       Df SumOfSqs      R2     F Pr(>F)    
-    ## as.factor(splFA[which(sexFA == "F")]) 10  0.19223 0.53912 4.562  0.001 ***
-    ## Residual                              39  0.16433 0.46088                 
-    ## Total                                 49  0.35656 1.00000                 
+    ##                                       Df SumOfSqs      R2      F Pr(>F)    
+    ## as.factor(splFA[which(sexFA == "F")]) 10  0.18553 0.53706 4.5244  0.001 ***
+    ## Residual                              39  0.15992 0.46294                  
+    ## Total                                 49  0.34545 1.00000                  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -305,10 +305,10 @@ adonis2(FAprct[which(sexFA=="M"),]~as.factor(splFA[which(sexFA=="M")]), method="
     ## Number of permutations: 999
     ## 
     ## adonis2(formula = FAprct[which(sexFA == "M"), ] ~ as.factor(splFA[which(sexFA == "M")]), method = "bray")
-    ##                                       Df SumOfSqs      R2     F Pr(>F)    
-    ## as.factor(splFA[which(sexFA == "M")]) 10  0.31823 0.75184 9.998  0.001 ***
-    ## Residual                              33  0.10504 0.24816                 
-    ## Total                                 43  0.42327 1.00000                 
+    ##                                       Df SumOfSqs     R2      F Pr(>F)    
+    ## as.factor(splFA[which(sexFA == "M")]) 10  0.31347 0.7535 10.087  0.001 ***
+    ## Residual                              33  0.10255 0.2465                  
+    ## Total                                 43  0.41601 1.0000                  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -337,6 +337,26 @@ cut=cutree(dendro.fau, k=3)
 Visual representation of Principal Correspondance Analysis on FA assemblages
 ----------------------------------------------------------------------------
 
+    ##  [1] -0.040651665 -0.015921854 -0.042170435 -0.070678772 -0.021320813
+    ##  [6] -0.026010529 -0.021850636 -0.081366060 -0.029153319 -0.018210414
+    ## [11] -0.052799019 -0.044538476 -0.059878506 -0.018968765  0.005456984
+    ## [16] -0.063697552 -0.081051634  0.081353748 -0.068258654  0.013984307
+    ## [21]  0.017356317 -0.034404977  0.011090091  0.034083585 -0.033778545
+    ## [26] -0.080556027  0.018305697 -0.018888554 -0.072834068 -0.046552960
+    ## [31] -0.045721287 -0.060839097 -0.032088260  0.061857015 -0.015429076
+    ## [36] -0.050482566 -0.065709589  0.059241356  0.081949586 -0.026865688
+    ## [41] -0.054368957 -0.056542705 -0.084398042  0.101338042  0.073120263
+    ## [46] -0.022939520  0.094571857 -0.034228536 -0.061425402 -0.056411276
+    ## [51] -0.053947333  0.055866950 -0.069706078 -0.046117139  0.075149203
+    ## [56] -0.031879886 -0.064727474  0.016307871 -0.050901697  0.082866107
+    ## [61]  0.056654367 -0.054725965 -0.013887268  0.058783299  0.105501415
+    ## [66] -0.017984713  0.091531891 -0.048749155 -0.003146769  0.069552609
+    ## [71]  0.005973693 -0.039738686  0.048706792  0.004667423  0.020159973
+    ## [76]  0.107947901  0.030579880  0.015700881  0.073292596  0.093738877
+    ## [81]  0.013361268  0.098122187  0.091002243  0.097961050  0.079965980
+    ## [86] -0.036107903  0.008584081 -0.029291348  0.100823137 -0.029164554
+    ## [91]  0.071623672 -0.016160753  0.095914042 -0.006819289
+
 <img src="Script_files/figure-markdown_github/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /> Note that the figure was further modified with a vectorial graphics editor to avoid labels superposition
 
 Summary table
@@ -362,11 +382,11 @@ head(t(moyAG))
 
     ##                    [,1]      [,2]       [,3]
     ## M.Group.1      1.000000 2.0000000 3.00000000
-    ## M.C14.0iso     1.278230 0.4949711 0.06644387
-    ## M.C14.0        5.427584 2.6434784 0.75367521
-    ## M.C15.0iso     3.875104 1.8682050 0.61770342
-    ## M.C15.0anteiso 1.436755 0.6473241 0.11634275
-    ## M.C15.0        1.373719 0.7492566 0.25442934
+    ## M.C14.0iso     1.290163 0.5057761 0.06644387
+    ## M.C14.0        5.481193 2.6626359 0.75367521
+    ## M.C15.0iso     3.892608 1.9183734 0.61770342
+    ## M.C15.0anteiso 1.446844 0.6615470 0.11634275
+    ## M.C15.0        1.378976 0.7651920 0.25442934
 
 Significant changes in especially time-responsive FA
 ----------------------------------------------------
@@ -511,7 +531,7 @@ permutest(PIGvar)
     ## 
     ## Response: Distances
     ##           Df   Sum Sq   Mean Sq      F N.Perm Pr(>F)
-    ## Groups    27 0.056365 0.0020876 1.4521    999  0.103
+    ## Groups    27 0.056365 0.0020876 1.4521    999  0.109
     ## Residuals 88 0.126510 0.0014376
 
 Let's check if there are significant differences in carotenoid profiles between sampling events.
@@ -528,8 +548,8 @@ adonis2(PIGprct~sexPIG*as.factor(splPIG), method="bray")
     ## adonis2(formula = PIGprct ~ sexPIG * as.factor(splPIG), method = "bray")
     ##                           Df SumOfSqs      R2       F Pr(>F)    
     ## sexPIG                     1  0.30386 0.33750 87.1319  0.001 ***
-    ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.002 ** 
-    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.002 ** 
+    ## as.factor(splPIG)         13  0.16107 0.17890  3.5527  0.001 ***
+    ## sexPIG:as.factor(splPIG)  13  0.12852 0.14275  2.8349  0.004 ** 
     ## Residual                  88  0.30689 0.34086                   
     ## Total                    115  0.90034 1.00000                   
     ## ---
@@ -547,8 +567,8 @@ adonis2(pig[, -c(1:5)]~sexPIG*as.factor(splPIG), method="bray")
     ## adonis2(formula = pig[, -c(1:5)] ~ sexPIG * as.factor(splPIG), method = "bray")
     ##                           Df SumOfSqs      R2        F Pr(>F)    
     ## sexPIG                     1   8.2904 0.49348 122.0428  0.001 ***
-    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.147    
-    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.075 .  
+    ## as.factor(splPIG)         13   1.1626 0.06920   1.3165  0.186    
+    ## sexPIG:as.factor(splPIG)  13   1.3689 0.08149   1.5502  0.065 .  
     ## Residual                  88   5.9779 0.35583                    
     ## Total                    115  16.7999 1.00000                    
     ## ---
@@ -567,7 +587,7 @@ adonis2(PIGprct[sexPIG=="F",]~as.factor(splPIG)[sexPIG=="F"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "F", ] ~ as.factor(splPIG)[sexPIG == "F"], method = "bray")
     ##                                  Df SumOfSqs     R2      F Pr(>F)  
-    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766   0.02 *
+    ## as.factor(splPIG)[sexPIG == "F"] 13 0.024563 0.3758 2.1766  0.026 *
     ## Residual                         47 0.040800 0.6242                
     ## Total                            60 0.065363 1.0000                
     ## ---
@@ -584,7 +604,7 @@ adonis2(PIGprct[sexPIG=="M",]~as.factor(splPIG)[sexPIG=="M"], method="bray")
     ## 
     ## adonis2(formula = PIGprct[sexPIG == "M", ] ~ as.factor(splPIG)[sexPIG == "M"], method = "bray")
     ##                                  Df SumOfSqs    R2      F Pr(>F)   
-    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.002 **
+    ## as.factor(splPIG)[sexPIG == "M"] 13  0.26502 0.499 3.1412  0.003 **
     ## Residual                         41  0.26609 0.501                 
     ## Total                            54  0.53111 1.000                 
     ## ---
@@ -622,7 +642,59 @@ t(moyPig)
     ## le.Astaxanthin   "61"         "55"        
     ## le.totPIG        "61"         "55"
 
-Temporal changes in the relative abundance of Astaxanthin and Canthaxanthins
+Temporal changes in the relative abundance of astaxanthin and canthaxanthins
 ----------------------------------------------------------------------------
 
-<img src="Script_files/figure-markdown_github/unnamed-chunk-23-1.png" style="display: block; margin: auto;" />
+Let's describe the range of variations in the relative abundance of astaxanthin for each sex
+
+``` r
+range(PIGprct[sexPIG=="M", "Astaxanthin"])
+```
+
+    ## [1] 47.23066 86.49813
+
+``` r
+range(PIGprct[sexPIG=="F", "Astaxanthin"])
+```
+
+    ## [1] 70.04523 86.60448
+
+Let's check if there are significant differences between proportions of Astaxanthin in males and in females in late spring/early summer (from May to August) and the rest of the year
+
+``` r
+summerAstaM=split(PIGprct[sexPIG=="M", "Astaxanthin"], as.numeric(substring(pig$splDate[sexPIG=="M"], 4, 5))>4&as.numeric(substring(pig$splDate[sexPIG=="M"], 4, 5))<9)
+
+t.test(as.double(unlist(summerAstaM[1])), as.double(unlist(summerAstaM[2])))
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  as.double(unlist(summerAstaM[1])) and as.double(unlist(summerAstaM[2]))
+    ## t = -2.6719, df = 52.999, p-value = 0.009998
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -11.752783  -1.673758
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  67.43636  74.14963
+
+``` r
+summerAstaF=split(PIGprct[sexPIG=="F", "Astaxanthin"], as.numeric(substring(pig$splDate[sexPIG=="F"], 4, 5))>4&as.numeric(substring(pig$splDate[sexPIG=="F"], 4, 5))<9)
+
+t.test(as.double(unlist(summerAstaF[1])), as.double(unlist(summerAstaF[2])))
+```
+
+    ## 
+    ##  Welch Two Sample t-test
+    ## 
+    ## data:  as.double(unlist(summerAstaF[1])) and as.double(unlist(summerAstaF[2]))
+    ## t = -1.4478, df = 55.111, p-value = 0.1533
+    ## alternative hypothesis: true difference in means is not equal to 0
+    ## 95 percent confidence interval:
+    ##  -2.7844963  0.4486246
+    ## sample estimates:
+    ## mean of x mean of y 
+    ##  80.28541  81.45335
+
+<img src="Script_files/figure-markdown_github/unnamed-chunk-25-1.png" style="display: block; margin: auto;" />

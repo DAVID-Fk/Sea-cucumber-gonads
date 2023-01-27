@@ -219,10 +219,11 @@ cut=cutree(dendro.fau, k=3)
 ```{r, echo=FALSE, fig.width=9, fig.height=6, fig.align="center"}
 
 pcoa=dudi.pco(cailliez(vegdist(FAprct, method="bray")), scannf = F, nf = 2)
-pcoa$li[,2]=-pcoa$li[,2]
+pcoa$li[,2]
 
 #svg("PCoA2.svg", width=9,height=6)
 par(las=1, mar=c(4,5,1,2), mfrow=c(1,1))
+
 plot(pcoa$li, pcoa$co, type="n", ann=F, bty="n")
 title(xlab=paste("Axis 1 (49%)"), line=2)
 title(ylab=paste("Axis 2 (5%)"), line=3)
@@ -419,7 +420,32 @@ moyPig=data.frame(M=aggregate(cbind(PIGprct, totPIG), by=list(sexPIG), mean), SD
 t(moyPig)
 ```
 
-## Temporal changes in the relative abundance of Astaxanthin and Canthaxanthins
+## Temporal changes in the relative abundance of astaxanthin and canthaxanthins
+
+Let's describe the range of variations in the relative abundance of astaxanthin for each sex
+
+```{r}
+range(PIGprct[sexPIG=="M", "Astaxanthin"])
+range(PIGprct[sexPIG=="F", "Astaxanthin"])
+
+```
+
+
+Let's check if there are significant differences between proportions of Astaxanthin in males and in females in late spring/early summer (from May to August) and the rest of the year
+
+```{r}
+
+summerAstaM=split(PIGprct[sexPIG=="M", "Astaxanthin"], as.numeric(substring(pig$splDate[sexPIG=="M"], 4, 5))>4&as.numeric(substring(pig$splDate[sexPIG=="M"], 4, 5))<9)
+
+t.test(as.double(unlist(summerAstaM[1])), as.double(unlist(summerAstaM[2])))
+
+summerAstaF=split(PIGprct[sexPIG=="F", "Astaxanthin"], as.numeric(substring(pig$splDate[sexPIG=="F"], 4, 5))>4&as.numeric(substring(pig$splDate[sexPIG=="F"], 4, 5))<9)
+
+t.test(as.double(unlist(summerAstaF[1])), as.double(unlist(summerAstaF[2])))
+
+```
+
+
 ```{r echo=FALSE, fig.width=9, fig.height=4, fig.align="center"}
 
 #pdf("Asta.pdf", width=9, height=4)
